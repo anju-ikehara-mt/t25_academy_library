@@ -23,7 +23,7 @@ public class LoginController {
             return "redirect:book/index";
         }
         return "redirect:/login";
-        //testコメン
+        //testコメント
     }
 }
 
