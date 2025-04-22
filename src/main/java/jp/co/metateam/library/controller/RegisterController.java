@@ -30,7 +30,7 @@ public class RegisterController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/register")
+    @GetMapping("/register")//URLに乗る
     public String registerForm(Model model) {
         model.addAttribute("authorizationTypes", AuthorizationTypes.values());
 
@@ -38,35 +38,36 @@ public class RegisterController {
             model.addAttribute("accountDto", new AccountDto());
         }
 
-        return "register";
+        return "register";//アカウント画面がreturnで帰ってくる
     }
 
     
 
-    @PostMapping("/register")
+    @PostMapping("/register")//URLに乗らない（POST通信だから）
     public String register(@Valid @ModelAttribute AccountDto accountDto, BindingResult result, RedirectAttributes ra) {
         try {
 
-            boolean errEmailFlg = false;
+            boolean errEmailFlg = false;//初期値がfalseってこと
             boolean errEmpIdFlg = false;
             Account emailExist = this.accountService.selectByEmail(accountDto.getEmail());
+                                        //コントローラークラスのaccountDtoの中のイーメールをサービスクラスのselectByEmailに渡す
             Account employeeExist = this.accountService.selectByEmployeeId(accountDto.getEmployeeId());
-
+                       //employeeExistに格納↑
             if(emailExist != null){
                 result.rejectValue("email", "error.value", "登録済みのメールアドレスです");
-                errEmailFlg = true;
+                errEmailFlg = true;//とってきたイーメールが空じゃないときはエラーです
             }
             if(employeeExist != null){
                 result.rejectValue("employeeId", "error.value", "登録済みの社員番号です");
-                errEmpIdFlg = true;
+                errEmpIdFlg = true;//IDが空じゃないときはエラーです
             }
-            if (errEmailFlg || errEmpIdFlg) {
+            if (errEmailFlg || errEmpIdFlg) {//どっちかがtrueだったら処理できないとしたい（エラー扱いにしたい）
                 throw new Exception("Account already exists.");
             }
 
-            accountService.save(accountDto);
+            accountService.save(accountDto);//アカウント登録処理。アカウントサービスのsaveメソッドにaccountDtoを入れる
 
-            return "redirect:login";
+            return "redirect:login"; //ログイン後の画面に飛ぶ
         } catch (Exception e) {
             log.error(e.getMessage());
 
