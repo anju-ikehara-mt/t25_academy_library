@@ -27,6 +27,8 @@ public class AccountService implements UserDetailsService {
     }
 
     @Override
+        //@OverrideはJavaで使われる**アノテーション（注釈）の一つ
+        //オーバーライドっていうのは、親クラスで定義されているメソッドを、子クラスで“上書き”して独自の処理に変えること。
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = this.accountRepository.selectByEmail(email);
         if (account == null) {

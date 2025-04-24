@@ -14,13 +14,13 @@ import lombok.Setter;
 @Setter
 public class BookMstDto {
     
-    private Long id; 
+    private Long id; //is(変数)にはLong型しか入らないよ
     
-    private String isbn;
+    private String isbn;//add.htmlのISBNで使う変数名？と揃える
 
-    private String title;
-    
+    private String title;//title（変数）にはStringしか入らないよーを定義
+
     private Timestamp deletedAt;
 
-    private BookMst bookMst;
+    private BookMst bookMst;//bookMst(変数)にはBookMstしか入らないよーを定義SS
 }
