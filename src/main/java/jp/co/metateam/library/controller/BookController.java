@@ -66,7 +66,7 @@ public class BookController {
    public String registBook(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result,RedirectAttributes ra) {
                                          //BookMstDtoはクラス名（StringとかINTとかのイメージ）で、bookMstDtoは変数名　みたいなイメージ
             
-                                         try{
+                try{
 
                 boolean errTitleFlg = false;//初期値がfalseってこと
                 boolean errIsbnFlg = false;
@@ -97,7 +97,7 @@ public class BookController {
                 //     errTitleFlg = true;
                     
                 // }
-                else if (title.length() != 13){
+                else if (isbn.length() != 13){
                      result.rejectValue("isbn", "error.value", "ISBNは13桁で入力してください");
                      errIsbnFlg = true;
                     }
