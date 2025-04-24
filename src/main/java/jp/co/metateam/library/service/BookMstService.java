@@ -59,10 +59,12 @@ public class BookMstService {
             BookMst BookMst = new BookMst();
 
             BookMst.setTitle(bookMstDto.getTitle());
+            // setTitleに入力値を設定する
             BookMst.setIsbn(bookMstDto.getIsbn());
 
             // データベースへの保存
             this.bookMstRepository.save(BookMst);
+            // bookMstDtoの値をDBのsaveに引数として渡す
         } catch (Exception e) {
             throw e;
         }

@@ -22,7 +22,7 @@
 
                     </div>
                     <form id="book_register_form" th:object="${bookMstDto}" th:action="@{/book/add}" method="post">
-
+                                     <!-- BookContorollerに入れた値がここのth:object="${bookMstDto}に入る -->
                         <div class="from-group">
                             <label style="color: red" for="label_name">*は必須項目です</label>
 
@@ -41,6 +41,7 @@
                             <label style="color: red" for="book_name">*</label>
                             </br>
                             <input type="text" name="isbn" th:field="*{isbn}" placeholder="ISBNを入力" maxlength="13">
+                                         <!-- まず、th:field="*{isbn}"に画面で入力した値が飛んでくる -->
                             <span th:if="${#fields.hasErrors('isbn')}"th:errors="*{isbn}" style="color:red;"></span>
 
 

@@ -23,8 +23,10 @@ import lombok.extern.log4j.Log4j2;
 /**
  * 書籍関連クラス
  */
+import java.util.Objects;
 @Log4j2
 @Controller
+
 public class BookController {
     
     private final BookMstService bookMstService;
@@ -48,7 +50,10 @@ public class BookController {
     public String add(Model model) {
         if (!model.containsAttribute("bookMstDto")) {
             model.addAttribute("bookMstDto", new BookMstDto());
-                 //addAttributeに値を格納してreturnで値を返す
+                 //addAttribute（bookMstDto）に値を格納してreturnで値を返す
+                //  bookMstDtoにnew BookMstDtoを格納
+                // modelが画面とコントローラを繋げるアノテーション
+                // 
         }
 
         return "book/add";
@@ -56,6 +61,8 @@ public class BookController {
 
 
     @PostMapping("/book/add")
+    // addの画面で保存ボタンをオスとここに値が飛んでくる
+    
    public String registBook(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result,RedirectAttributes ra) {
                                          //BookMstDtoはクラス名（StringとかINTとかのイメージ）で、bookMstDtoは変数名　みたいなイメージ
             
@@ -67,31 +74,44 @@ public class BookController {
                                             //コントローラークラスのaccountDtoの中のイーメールをサービスクラスのselectByEmailに渡す
                 String isbn = bookMstDto.getIsbn();
                            //employeeExistに格納↑
-              
-                if(String.valueOf(title).length() > 50){
-                    result.rejectValue("title", "error.value", "書籍名は50字で入力してください");
-                    errTitleFlg = true;
-                    }
-                if(title == null || title.trim().isEmpty()){
+                if (Objects.isNull(title) || title.trim().isEmpty()) {
+                        //    if(title == null || title.trim().isEmpty()){
                     result.rejectValue("title", "error.value", "書籍名は必須です");
                     errTitleFlg = true;
-                    
+                            
+                        }
+
+                else if (title.length() > 50){
+                    result.rejectValue("title", "error.value", "書籍名は50字で入力してください");
+                                  //   "title", "error.value", "書籍名は50字で入力してください"はadd.htmlに値が返る
+                    errTitleFlg = true;
                 }
-                if(String.valueOf(isbn).length() != 13){
+                // if (Objects.isNull(isbn) || isbn.trim().isEmpty()) {
+                if(isbn == null || isbn.trim().isEmpty()){
+                        result.rejectValue("isbn", "error.value", "ISBNは必須です");
+                        errIsbnFlg = true;  
+                        
+                    }
+                // if(title == null || title.trim().isEmpty()){
+                //     result.rejectValue("title", "error.value", "書籍名は必須です");
+                //     errTitleFlg = true;
+                    
+                // }
+                else if (title.length() != 13){
                      result.rejectValue("isbn", "error.value", "ISBNは13桁で入力してください");
                      errIsbnFlg = true;
                     }
-                if (!String.valueOf(isbn).matches("\\d+")) {
+                else if (!String.valueOf(isbn).matches("\\d+")) {
                     result.rejectValue("isbn", "error.value", "ISBNは半角数字のみで入力してください");
                     errIsbnFlg = true; 
                     }
-                if(isbn == null || isbn.trim().isEmpty()){
-                    result.rejectValue("isbn", "error.value", "ISBNは必須です");
-                    errIsbnFlg = true;  
+                // if(isbn == null || isbn.trim().isEmpty()){
+                //     result.rejectValue("isbn", "error.value", "ISBNは必須です");
+                //     errIsbnFlg = true;  
                     
-                }
+                // }
 
-             if (bookMstService.selectByIsbn(bookMstDto.getIsbn()) != null) {
+             else if (bookMstService.selectByIsbn(isbn) != null) {
 
                 result.rejectValue("isbn", "error.value", "登録済みのISBNです");
                 errIsbnFlg = true;
@@ -100,6 +120,7 @@ public class BookController {
                 
             if (errTitleFlg || errIsbnFlg){
                 return "book/add";
+                // returnでこの処理終わり！みたいな意味
             }
      
                 
@@ -108,13 +129,13 @@ public class BookController {
                 bookMstService.save(bookMstDto);
                   //○○サービス.△△を呼び出して、bookMstDtoに保存
                 return "redirect:/book/index";
+                // index画面へ
             
             } catch (Exception e) {
                 log.error(e.getMessage());
                 ra.addFlashAttribute("bookDto", bookMstDto);
                 ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMst", result);
               
-                bookMstService.save(bookMstDto);
 
             return "book/add";//書籍一覧画面に飛ぶ
 
