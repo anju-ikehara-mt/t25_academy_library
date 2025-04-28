@@ -22,17 +22,21 @@
 
                     </div>
                     <form id="book_register_form" th:object="${bookMstDto}" th:action="@{/book/add}" method="post">
-                                     <!-- BookContorollerに入れた値がここのth:object="${bookMstDto}に入る -->
+                        <!-- BookContorollerに入れた値がここのth:object="${bookMstDto}に入る -->
+                        <!--  method="post"でPOST通信を指定していて、BookController.javaのPOSTに飛ぶ-->
                         <div class="from-group">
+                            <!-- ラベルと入力フィールドをグルーピング（まとめる）するための要素。フォームの見た目が整いやすくなる。 -->
                             <label style="color: red" for="label_name">*は必須項目です</label>
-
+                            </br>
                             <label for="book_name">書籍名</label>
                             <label style="color: red" for="book_name">*</label>
                             </br>
                             <input type="text" name="title" th:field="*{title}" placeholder="書籍名を入力" padding=10px
                                 maxlength="255">
-                            <span th:if="${#fields.hasErrors('title')}"th:errors="*{title}" style="color:red;"></span>
-
+                            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color:red;"></span>
+                            <!--"${#fields.hasErrors('title')}"で、 title フィールドにエラーがあれば表示（なければ表示しない） -->
+                            <!--th:errors="*{title}"で、 title フィールドに対応する エラーメッセージ を表示 -->
+                            <!-- <span> はエラーメッセージの表示用コンテナ（赤字とかにするため） -->
                         </div>
                         </br>
 
@@ -41,17 +45,17 @@
                             <label style="color: red" for="book_name">*</label>
                             </br>
                             <input type="text" name="isbn" th:field="*{isbn}" placeholder="ISBNを入力" maxlength="13">
-                                         <!-- まず、th:field="*{isbn}"に画面で入力した値が飛んでくる -->
-                            <span th:if="${#fields.hasErrors('isbn')}"th:errors="*{isbn}" style="color:red;"></span>
+                            <!-- まず、th:field="*{isbn}"に画面で入力した値が飛んでくる -->
+                            <!-- input typeはユーザーにデータを入力させるためのHTMLタグ -->
+                            <span th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" style="color:red;"></span>
 
 
 
                         </div>
                         </br>
-                        <div class="btn_block">
-                            <!-- 上間違ってた -->
+                        <div class="btn_block" style="text-align:center;">
 
-                            <input type="submit" value="保存">
+                            <input type="submit" id="submit_btn" value="保存">
                         </div>
                     </form>
                 </div>

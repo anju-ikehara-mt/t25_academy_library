@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{common :: meta_header('書籍一覧',~{::link},~{::script})}">
     <title th:text="${title}+' | MTLibrary'"></title>
     <link rel="stylesheet" th:href="@{/css/book/index.css}" />
     <script type="text/javascript" th:src="@{/js/book/index.js}"></script>
 </head>
+
 <body>
     <div class="contents">
         <div th:replace="~{common :: main_sidebar}"></div>
@@ -12,6 +14,43 @@
             <div th:replace="~{common :: header}"></div>
             <div class="inner_contens">
                 <div class="page_title">書籍一覧</div>
+                <div class="btn_block">
+                    <!-- <input type="submit" value="書籍登録"> -->
+                    <a th:href="@{/book/add}" class ="btn_register">書籍登録</a> 
+                             </div>
+                <table class="books_table">
+                        <tr>
+                            <th>書籍名</th>
+                            <th>ISBN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="bookMst : ${bookMstList}">
+                            <td th:text="${bookMst.title}">書籍タイトル</td>
+                            <td th:text="${bookMst.isbn}">ISBNコード</td>
+                        </tr>
+                    </tbody>
+                </table>
+      
+                        
+                    <!-- <form id="book_index_form" th:object="${bookMstList}" th:action="@{/book/index}" method="get">
+                <div class="mb30 flexarea"></div>
+                    <a th:action="@{/book/add}" class = "btn_block" >+書籍登録</a>
+                        <span></span>
+                            <table border="1">
+                            </thead>
+                                <tr>
+                                    <th>書籍名</th>
+                                    <th>ISBN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="book : ${bookMstListMstList}">
+                                    <td th:text="${book.name}">書籍名</td>
+                                    <td th:text="${book.isbn}">ISBN</td>
+                                </tr>
+                            </tbody>
+                        </table> -->
             </div>
         </div>
     </div>
