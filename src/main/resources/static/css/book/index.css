@@ -62,5 +62,23 @@
 .books_table td a{
   color: #0000EE;
 }
+.books_table {
+ width: 100%;
+ border-collapse: collapse;
+ margin-top: 20px;
+ border: 1px solid #B9B9B9;
+}
+.books_table th,
+.books_table td{
+  border:1pxsolid pink;
+  padding: 8px 12px;
+  text-align: left;
+  background-color:aquamarine;
+}
+.books_table th{
+ background-color:cadetblue;
+ font-weight:bold;
+}
+  
 
 books_table

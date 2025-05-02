@@ -30,7 +30,7 @@ public class BookMstService {
     }
 
     public BookMst selectByIsbn(String isbn) {
-        return this.bookMstRepository.findByTitle(isbn).orElse(null);
+        return this.bookMstRepository.findByIsbn(isbn).orElse(null);
     }
 
     public List<BookMstDto> findAvailableWithStockCount() {
