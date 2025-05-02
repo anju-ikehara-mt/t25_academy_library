@@ -14,6 +14,7 @@ public class LoginController {
     @GetMapping("/login")
     public String login() {
         return "login";
+        //htmlのファイルを返す
     }
     
     @GetMapping("/")
@@ -23,7 +24,7 @@ public class LoginController {
             return "redirect:book/index";
         }
         return "redirect:/login";
-        //testコメント
+        //
     }
 }
 
