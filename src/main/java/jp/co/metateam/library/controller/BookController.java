@@ -42,7 +42,7 @@ public class BookController {
     public String index(Model model) {
         // 書籍を全件取得
         List<BookMstDto> bookMstList = this.bookMstService.findAvailableWithStockCount();
-        // findAvailableWithStockCountが書籍情報を全件取得コントローラー
+        // findAvailableWithStockCountが書籍情報を全件取得コントローラー(ブックマストテーブルからとってくる)
         // Listは可変長の型（なんでもいれることができる型）（DBにいくつ入っているかわからないときは、なんでも入れられるListを使う）
         // 今回はBookMstDto型が入るList型を作っている
         // List<BookMstDto>型の変数名 bookMstList
@@ -51,7 +51,7 @@ public class BookController {
         // bookMstListの値をhtmlのattributeName:"bookMstList"に詰めているってこと
 
         return "book/index";
-        // ここで画面に表示させる
+        // ここで画面に遷移させる
     }
 
     @GetMapping("/book/add")
@@ -79,53 +79,57 @@ public class BookController {
         String titleExist = bookMstDto.getTitle();
         // コントローラークラスのaccountDtoの中のイーメールをサービスクラスのselectByEmailに渡す
         String isbnExist = bookMstDto.getIsbn();
-        // List<String> errTitleList = new ArrayList<>();
-        // List<String> errIsbnList = new ArrayList<>(); // エラーメッセージのリスト
+       
         // employeeExistに格納↑
         if (Objects.isNull(titleExist) || titleExist.trim().isEmpty()) {
             result.rejectValue("title", "error.value", "書籍名は必須です");
-            // errTitleList .add("書籍名は必須です");
             errTitleFlg = true;
 
         }
-
-        else if (titleExist.length() > 50) {
+    if(titleExist != null && titleExist.length() > 50){
+        // if (titleExist.length()>= 50) {
             result.rejectValue("title", "error.value", "書籍名は50字以内で入力してください");
             // "title", "error.value", "書籍名は50字で入力してください"はadd.htmlに値が返る
-            // errTitleList .add("書籍名は50字以内で入力してください");
             errTitleFlg = true;
         }
         if (isbnExist == null || isbnExist.trim().isEmpty()) {
             result.rejectValue("isbn", "error.value", "ISBNは必須です");
-            // errIsbnList.add("ISBNは必須です");
             errIsbnFlg = true;
-        } else if (isbnExist.length() != 13) {
+        }
+        else {if (isbnExist.length() != 13) {
+            // if文も試してここも試してね
             result.rejectValue("isbn", "error.value", "ISBNは13桁で入力してください");
-            // errIsbnList.add("ISBNは13桁で入力してください");
             errIsbnFlg = true;
         }
         if (!String.valueOf(isbnExist).matches("^[0-9]+$")) {
+            // 何通りか試したいときは、else{if{if}}にすると、3つめのパターンも通ってくれる
             result.rejectValue("isbn", "error.value", "ISBNは半角数字のみで入力してください");
-            // errIsbnList.add("ISBNは半角数字のみで入力してください");
             errIsbnFlg = true;
         }
-        if (bookMstService.selectByIsbn(bookMstDto.getIsbn()) != null) {
+    }
+
+
+       BookMst tesDto= bookMstService.selectByIsbn(bookMstDto.getIsbn());
+        if (tesDto != null) {
             result.rejectValue("isbn", "error.value", "登録済みのISBNです");
-            ra.addFlashAttribute("bookDto", bookMstDto);
-            ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMst", result);
-            return "book/add";// 書籍一覧画面に飛ぶ
+            // ra.addFlashAttribute("bookDto", bookMstDto);
+            // ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMst", result);
+            errIsbnFlg = true;
         }
 
         if (errTitleFlg||errIsbnFlg) {
-        // model.addAttribute("errTitle");
-        // model.addAttribute("errIsbn", errIsbnList);
-        return "book/add";
+            // model.addAttribute("bookMstDto", new BookMstDto());
+            // ra.addFlashAttribute("bookDto", bookMstDto);
+            // ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMst", result);
+          
+            return "/book/add";
         }
-        if (result.hasErrors()) {
-            model.addAttribute("bookMstDto", new BookMstDto());
-            // new ○○で新しく○○という箱をつくりますよ
-            return "book/add";
-        }
+        // if (result.hasErrors()) {
+        //     // バリデーションエラーがあるかどうかをチェックする
+        //     model.addAttribute("bookMstDto", new BookMstDto());
+        //     // new ○○で新しく○○という箱をつくりますよ
+        //     return "book/add";
+        // }
 
         try {
             bookMstService.save(bookMstDto);

@@ -44,7 +44,7 @@
                             <label for="isbn">ISBN</label>
                             <label style="color: red" for="book_name">*</label>
                             </br>
-                            <input type="text" name="isbn" th:field="*{isbn}" placeholder="ISBNを入力" maxlength="13">
+                            <input type="text" name="isbn" th:field="*{isbn}" placeholder="ISBNを入力" maxlength="300">
                             <!-- まず、th:field="*{isbn}"に画面で入力した値が飛んでくる -->
                             <!-- input typeはユーザーにデータを入力させるためのHTMLタグ -->
                             <span th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" style="color:red;"></span>

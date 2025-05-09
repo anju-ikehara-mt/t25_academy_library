@@ -30,6 +30,7 @@
                     </thead>
                     <tbody> <!-- 実際のデータ行をまとめる部分 -->
                         <tr th:each="bookMst : ${bookMstList}">
+                            <!-- th:eachは繰り返し処理 -->
                             <td th:text="${bookMst.title}">書籍タイトル</td>
                             <td th:text="${bookMst.isbn}">ISBNコード</td>
                         </tr>
