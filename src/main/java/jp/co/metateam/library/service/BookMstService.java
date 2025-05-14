@@ -2,6 +2,7 @@ package jp.co.metateam.library.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,9 @@ import jp.co.metateam.library.repository.BookMstRepository;
 public class BookMstService {
 
     private final BookMstRepository bookMstRepository;
-    
+
     @Autowired
-    public BookMstService(BookMstRepository bookMstRepository){
+    public BookMstService(BookMstRepository bookMstRepository) {
         this.bookMstRepository = bookMstRepository;
     }
 
@@ -31,6 +32,36 @@ public class BookMstService {
 
     public BookMst selectByIsbn(String isbn) {
         return this.bookMstRepository.findByIsbn(isbn).orElse(null);
+    }
+
+    public BookMstDto findById(Long id) {
+        BookMst book = bookMstRepository.findById(id).orElse(null);
+        if (book == null)
+            return null;
+        BookMstDto dto = new BookMstDto(); // DTO を作成。
+        // new BookMstDto()が、新しいインスタンス（オブジェクト）。下のId、Title、Isbnを入れる箱（オブジェクト）を作っている
+        dto.setId(book.getId()); // 値をコピー
+        dto.setTitle(book.getTitle());
+        dto.setIsbn(book.getIsbn()); // DTOを返す
+        return dto;
+    }
+
+    // updateメソッド
+    @Transactional
+    public void update(BookMstDto bookMstDto) {
+        Optional<BookMst> optional = bookMstRepository.findById(bookMstDto.getId());
+        // ID をもとに、データベースから該当する書籍データを探す
+        // Optional は「存在するかもしれないし、しないかもしれない」ことを表す型
+        if (optional.isPresent()) {
+            // 書籍が見つかったかどうかをチェック（見つかっていたら true）
+            BookMst book = optional.get();
+            book.setTitle(bookMstDto.getTitle());
+            book.setIsbn(bookMstDto.getIsbn());
+            // データベースから取得した書籍エンティティに対して、DTOから渡されたタイトルとISBNをセット（＝上書き）
+            bookMstRepository.save(book);
+        } else {
+            throw new IllegalArgumentException("対象の書籍が見つかりません。");
+        }
     }
 
     public List<BookMstDto> findAvailableWithStockCount() {
@@ -51,8 +82,7 @@ public class BookMstService {
         return bookMstDtoList;
     }
 
-
-     @Transactional
+    @Transactional
     public void save(BookMstDto bookMstDto) {
         try {
             // BookMstDtoからBookMstへの変換
@@ -69,10 +99,5 @@ public class BookMstService {
             throw e;
         }
     }
-  
-        
 
 }
-
-
-

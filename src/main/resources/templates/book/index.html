@@ -8,36 +8,69 @@
 </head>
 
 <body>
+
     <div class="contents">
         <!-- div=ページ内のセクションを作るためのタグ -->
         <div th:replace="~{common :: main_sidebar}"></div>
         <div class="main_contents">
             <div th:replace="~{common :: header}"></div>
             <div class="inner_contens">
-                  <!-- ラベルと入力フィールドをグルーピング（まとめる）するための要素。フォームの見た目が整いやすくなる。 -->
+                <!-- ラベルと入力フィールドをグルーピング（まとめる）するための要素。フォームの見た目が整いやすくなる。 -->
                 <div class="page_title">書籍一覧</div>
                 <!-- class="page_title＝CSSなどで使うためのクラス名をつけている部分 -->
                 <!-- 書籍一覧＝実際にブラウザで表示されるテキスト。このセクションのタイトルとして「書籍一覧」と表示される -->
-                    <div class="btn_block" style="text-align:right;">
-                    <a th:href="@{/book/add}" class ="btn_register">書籍登録</a> 
-                             </div>
+                <div class="btn_block" style="text-align:right;">
+                    <a th:href="@{/book/add}" class="btn_register">書籍登録</a>
+                </div>
                 <table class="books_table">
                     <thead><!-- 表のヘッダー部分（列の見出し）をまとめるタグ -->
                         <tr>
+                            <!-- tr・・・1行（table row）を作るタグ  -->
                             <th>書籍名</th>
+                            <!-- th・・・見出しセル（太字＋中央寄せになる） -->
                             <th>ISBN</th>
                         </tr>
                     </thead>
                     <tbody> <!-- 実際のデータ行をまとめる部分 -->
                         <tr th:each="bookMst : ${bookMstList}">
-                            <!-- th:eachは繰り返し処理 -->
-                            <td th:text="${bookMst.title}">書籍タイトル</td>
+                            <td>
+                                <!--  td・・・HTMLテーブルのデータセル（表の1つのマス）を作るタグ -->
+                                <a th:href="@{/book/edit/{id}(id=${bookMst.id})}" class="edit_btn">
+                                    <img th:src="@{/images/icons/edit.png}" alt="edit" class="png"
+                                        style="vertical-align: middle; width: 16px; height: 16px;">
+                                    <!-- vertical-align: middle; → 画像とテキストを縦方向に揃える。
+                                        width/height → ボタン画像の大きさを調整（必要なら変更してOK）
+                                        argin-right: 8px; → アイコンとテキストの間に余白を入れる。
+                                        <a> の中に <img> → ボタンとして画像を使っている -->
+                                </a>
+                                <a th:href="@{'/book/delete'}" title="削除" onclick="return confirm('本当に削除しますか？')"></a>
+                                <img th:src="@{/images/icons/trash.png}" alt="edit" class="png"
+                                    style="vertical-align: middle; width: 16px; height: 16px;">
+                                </a>
+                                <span th:text="${bookMst.title}">書籍タイトル
+                            </td>
+                            </td>
                             <td th:text="${bookMst.isbn}">ISBNコード</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </form>
+                         </tr>
+                            <div id="message" th:attr="data-errormessage=${errormessage}">
+                             </div>
+                            </div>
+                                <script th:inline="javascript">
+                                    // ?th:inline="javascript"・・・JAvaSにタイムリーフの指揮を埋め込むため
+                                /*<![CDATA[*/
+                                let message = /*[[${errormessage}]]*/ "";
+                                if (message) {
+                                alert(message);
+                                }
+                                 /*]]>*/              
+                                // L82,L87で囲むとタイムリーフで使っている式を使うことができるようになる
+                                 </script>
+                            </div>
+                     </tbody>
+              </table>
         </div>
+    </div>
     </div>
     <div th:replace="~{common :: footer}"></div>
 </body>
