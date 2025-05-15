@@ -1,6 +1,7 @@
 package jp.co.metateam.library.model;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -23,4 +24,6 @@ public class BookMstDto {
     private Timestamp deletedAt;
 
     private BookMst bookMst;//bookMst(変数)にはBookMstしか入らないよーを定義SS
+
+    // private LocalDateTime datetime;
 }
